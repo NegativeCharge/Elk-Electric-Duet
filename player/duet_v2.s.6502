@@ -1,0 +1,204 @@
+; ***************************************************************************
+; *   Copyright (C) 1979-2015 by Paul Lutus                                 *
+; *   http://arachnoid.com/administration                                   *
+; *                                                                         *
+; *   This program is free software; you can redistribute it and/or modify  *
+; *   it under the terms of the GNU General Public License as published by  *
+; *   the Free Software Foundation; either version 2 of the License, or     *
+; *   (at your option) any later version.                                   *
+; *                                                                         *
+; *   This program is distributed in the hope that it will be useful,       *
+; *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+; *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+; *   GNU General Public License for more details.                          *
+; *                                                                         *
+; *   You should have received a copy of the GNU General Public License     *
+; *   along with this program; if not, write to the                         *
+; *   Free Software Foundation, inc.,                                       *
+; *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+; ***************************************************************************
+
+; Electric Duet Player Routine circa 1980
+
+; Modified by Alexander Patalenski
+; Most comments added by Vince Weaver
+; Acorn Electron BeebAsm conversion by Negative Charge
+
+MACRO toggleSpeaker
+    pha                                     ; 3
+    lsr     toggle                          ; 5
+    bcs     flagWasClear                    ; 2/3
+    inc     toggle                          ; 5 - inject a set bit at the right-hand end of the byte to restore the pattern
+.flagWasSet
+	lda     #SPEAKER_ON                     ; 2
+	jmp     exit                            ; 3
+.flagWasClear
+    rol     temp                            ; 5 dummy
+	lda     #SPEAKER_OFF                    ; 2
+.exit
+	sta     SHEILA_MISC_CONTROL             ; 4
+    pla                                     ; 4
+ENDMACRO
+
+.play_ed
+    LDA     #$00                            ; 2
+    STA     D8                              ; 3
+    STA     D6                              ; 3
+    STA     D7                              ; 3
+.l2808    
+    LDY     #$00                            ; 2
+    LDA     (music_addr_low),Y              ; 5 (+1 if page boundary crossed)
+    BNE     l280F                           ; 2/3 (+1 if page boundary crossed)
+
+.l280E 
+    RTS                                     ; 6
+
+.l280F         
+    STA     D2                              ; 3
+
+    ;-------------------------------------------------------------------- 
+    ;LDA $C000                              ; 4           ; KEYBOARD DATA    
+    ;BMI l280E                              ; 2/3
+    ;--------------------------------------------------------------------
+
+    LDX     #$00                            ; 2
+    JSR     l28B3                           ; 6
+        
+    STA     l284C+1                         ; 4
+    STA     l285C+1                         ; 4
+    STX     l284F+1                         ; 4
+    STX     l285F+1                         ; 4
+    
+    LDX     #$01                            ; 2
+    JSR     l28B3                           ; 6
+
+    STA     l2876+1                         ; 4     
+    STA     l2886+1                         ; 4
+    STX     l2879+1                         ; 4
+    STX     l2889+1                         ; 4
+    
+    LDA     #$00                            ; 2    
+    LDX     #$8A                            ; 2
+    LDY     #$40                            ; 2
+    STA     D3                              ; 3
+.l2840   
+    STA     D8                              ; 3
+    DEY                                     ; 2
+    BNE     l2853                           ; 2/3 (+1 if page boundary crossed)
+    LDY     D4                              ; 3
+    BIT     D8                              ; 3
+    BMI     l2864                           ; 2/3 (+1 if page boundary crossed)
+    ;--------------------------------------------------------------------
+    ;BIT $C030                              ; 4     - LEN: 3, TIM 4
+    toggleSpeaker                           ; 28
+.l284C    
+    CMP $FFFF                               ; 4     - LEN: 3, TIM 4
+    ;--------------------------------------------------------------------
+.l284F        
+    EOR     #$A0                            ; 2
+    JMP     l2868                           ; 3
+.l2853  
+    CPY     D6                              ; 3
+    BNE     l2863                           ; 2/3 (+1 if page boundary crossed)
+    BIT     D8                              ; 3
+    BPL     l2865                           ; 2/3 (+1 if page boundary crossed)
+    ;--------------------------------------------------------------------
+    ;BIT    $C030                           ; 4     - LEN: 3, TIM 4
+    toggleSpeaker                           ; 28
+.l285C     
+    CMP     $FFFF                           ; 4     - LEN: 3, TIM 4
+    ;--------------------------------------------------------------------    
+.l285F    
+    EOR     #$A0                            ; 2
+    JMP     l2869                           ; 3
+.l2863
+    NOP                                     ; 2
+.l2864        
+    NOP                                     ; 2
+.l2865        
+    NOP                                     ; 2
+    NOP                                     ; 2
+    NOP                                     ; 2
+.l2868       
+    NOP                                     ; 2
+.l2869     
+    NOP                                     ; 2
+    STA     D8                              ; 3
+    DEX                                     ; 2
+    BNE     l287D                           ; 2/3 (+1 if page boundary crossed)
+    LDX     D5                              ; 3
+    BIT     D8                              ; 3
+    BMI     l288E                           ; 2/3 (+1 if page boundary crossed)
+    ;--------------------------------------------------------------------
+    ;BIT    $C030                           ; 4     - LEN: 3, TIM 4
+    toggleSpeaker                           ; 28
+.l2876 
+    CMP     $FFFF                           ; 4     - LEN: 3, TIM 4
+    ;--------------------------------------------------------------------
+.l2879     
+    EOR     #$A0                            ; 2
+    JMP     l2892                           ; 3
+.l287D  
+    CPX     D7                              ; 3
+    BNE     l288D                           ; 2/3 (+1 if page boundary crossed)
+    BIT     D8                              ; 3
+    BPL     l288F                           ; 2/3 (+1 if page boundary crossed)
+    ;--------------------------------------------------------------------
+    ;BIT    $C030                           ; 4     - LEN: 3, TIM 4
+    toggleSpeaker                           ; 28
+.l2886         
+    CMP     $FFFF                           ; 4     - LEN: 3, TIM 4
+    ;--------------------------------------------------------------------
+.l2889   
+    EOR     #$A0                            ; 2      
+    JMP     l2893                           ; 3
+.l288D 
+    NOP                                     ; 2
+.l288E    
+    NOP                                     ; 2
+.l288F      
+    NOP                                     ; 2
+    NOP                                     ; 2
+    NOP                                     ; 2
+.l2892         
+    NOP                                     ; 2
+.l2893    
+    NOP                                     ; 2
+    DEC D3                                  ; 5
+    BNE l289F                               ; 2/3 (+1 if page boundary crossed)
+    DEC D2                                  ; 5
+    BEQ l28A5                               ; 2/3 (+1 if page boundary crossed)
+    JMP l2840                               ; 3
+.l289F
+    NOP                                     ; 2
+    NOP                                     ; 2
+    NOP                                     ; 2
+    JMP l2840                               ; 3
+.l28A5   
+    LDA music_addr_low                      ; 3     
+    CLC                                     ; 2
+    ADC #$03                                ; 2
+    STA music_addr_low                      ; 3     
+    BCC l28B0                               ; 2/3 (+1 if page boundary crossed)
+    INC music_addr_high                     ; 5 
+.l28B0
+    JMP l2808                               ; 3
+.l28B3        
+    INY                                     ; 2
+    LDA (music_addr_low),Y                  ; 5 (+1 if page boundary crossed)    
+    PHP                                     ; 3
+    STA D4,X                                ; 4
+    CMP #$05                                ; 2
+    BCC l28BF                               ; 2/3 (+1 if page boundary crossed)
+    LSR A                                   ; 2
+    LSR A                                   ; 2
+.l28BF     
+    LSR A                                   ; 2
+    LSR A                                   ; 2
+    STA D6,X                                ; 4
+    PLP                                     ; 4
+    BEQ l28CA                               ; 2/3 (+1 if page boundary crossed)
+    LDA #$30                                ; 2
+    LDX #$A0                                ; 2
+.l28CA
+    RTS                                     ; 6
