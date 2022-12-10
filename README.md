@@ -1,6 +1,6 @@
 # Acorn Electron Electric Duet 1-bit Beeper Engine Player
 
-##Electric Duet
+## Electric Duet
 
 A classic Apple ][ program that performed music in two voices by Paul Lutus (http://arachnoid.com/administration)
 
