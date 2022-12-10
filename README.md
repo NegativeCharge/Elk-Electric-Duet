@@ -6,7 +6,7 @@ A classic Apple ][ program that performed music in two voices by Paul Lutus (htt
 
 - Original version by Paul Lutus (circa 1980)
 - Enhancements by Alexander Patalenski (circa 1989)
-- Acorn Electron port by Negative Charge - Dec 2022
+- Acorn Electron port by Negative Charge (Dec 2022)
 
 The track currently needs to be included at the bottom of main.6502
 
