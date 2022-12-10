@@ -8,7 +8,8 @@ A classic Apple ][ program that performed music in two voices by Paul Lutus (htt
 - Acorn Electron port by Negative Charge - Dec 2022
 
 The track currently needs to be included at the bottom of main.6502
-Music data files should be extracted from original Electric Duet disks
+
+Music data files should be extracted from original Electric Duet disks. Cider Press is useful for this purpose (https://a2ciderpress.com)
 
 Release Notes:
 
