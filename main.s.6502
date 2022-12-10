@@ -4,13 +4,13 @@ ORG     ZERO_PAGE_START
 GUARD   ZERO_PAGE_END
 
 INCLUDE "lib\os.h.6502"
-INCLUDE "player\duet_v2.h.6502"
+INCLUDE "player\duet.h.6502"
 
 ORG     BASE
 GUARD   SCREEN
 
 .start
-    INCLUDE "player\duet_v2.s.6502"
+    INCLUDE "player\duet.s.6502"
 
 .init
     sei                         ; Disable interrupts
@@ -25,7 +25,10 @@ GUARD   SCREEN
 
     lda     #$00
     sta     SHEILA_COUNTER      ; Zero the ULA SHEILA counter (FE06), creating a toggle speaker (inaudible frequency)
-   
+    
+    lda     #SPEAKER_OFF        ; Init toggle to the value of speaker off
+    sta     toggle
+    
     jsr     play_ed             ; Call the play routine
 
     lda     #SPEAKER_OFF        ; Turn off the speaker
@@ -36,7 +39,7 @@ GUARD   SCREEN
     rts
 
 .music_address
-    INCBIN ".\tracks\INVENTION 8.ED"
+    INCBIN ".\tracks\M.MELCHER"
 
 .end
 
@@ -59,3 +62,4 @@ PRINT "------------------------------"
 
 PUTBASIC "loader.bas","LOADER"
 PUTFILE  "BOOT","!BOOT",&FFFF
+PUTFILE  "bkgnd.mode4.bin","BKGND",&5800

@@ -1,12 +1,13 @@
-.freq1		        SKIP 1
-.freq2		        SKIP 1
-.duration	        SKIP 1
-.instrument1        SKIP 1
-.instrument2        SKIP 1
+.D2                 SKIP 1
+.D3                 SKIP 1
+.D4                 SKIP 1
+.D5                 SKIP 1
+.D6                 SKIP 1
+.D7                 SKIP 1
+.D8                 SKIP 1
+
 .music_addr_low		SKIP 1
 .music_addr_high	SKIP 1
-.loc4e		        SKIP 1
-.count256	        SKIP 1
-.toggle             SKIP 1
 
+.toggle             SKIP 1
 .temp               SKIP 1

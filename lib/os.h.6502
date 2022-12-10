@@ -1,0 +1,25 @@
+MACRO toggleSpeaker
+
+IF DEBUG
+    toggleRasters
+ENDIF
+
+    lda     toggle                          ; 3
+    eor     #(SPEAKER_ON EOR SPEAKER_OFF)   ; 2
+    sta     toggle                          ; 3
+    sta     SHEILA_MISC_CONTROL             ; 4
+ENDMACRO
+
+MACRO toggleRasters
+ 	beq		tr1
+ 	lda 	#$f0
+   	sta 	$fe08
+   	lda 	#$f0
+   	sta 	$fe09
+ 	jmp		tr2
+ .tr1
+ 	lda 	#$ff
+   	sta 	$fe08
+   	sta 	$fe09
+ .tr2
+ENDMACRO
