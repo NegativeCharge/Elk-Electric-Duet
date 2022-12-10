@@ -39,7 +39,7 @@ GUARD   SCREEN
     rts
 
 .music_address
-    INCBIN ".\tracks\M.THE ENTERTAINER"
+    INCBIN ".\tracks\M.AIR"
 
 .end
 
