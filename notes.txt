@@ -1,8 +1,8 @@
 
 
-Alexander Patalenski           Original (Paul Lutus)			Alternative (Alexander)
--------------------------      -------------------------		-------------------------
-2800:   A900   LDA #00         0803:   A901   LDA #01			6650:   A901   LDA #01
+Alexander Patalenski           Original (Paul Lutus)            Alternative (Alexander)
+-------------------------      -------------------------        -------------------------
+2800:   A900   LDA #00         0803:   A901   LDA #01           6650:   A901   LDA #01
 2802:   85D8   STA D8          0805:   8509   STA 09            6652:   8542   STA 42
 2804:   85D6   STA D6          0807:   851D   STA 1D            6654:   8543   STA 43
 2806:   85D7   STA D7          0809:   48     PHA               6656:   8544   STA 44

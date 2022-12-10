@@ -29,7 +29,7 @@ MACRO loadTriplet
     lda     (music_addr_low),Y              ; 5 (+1 if page boundary crossed)    
     sta     D4,X                            ; 4
     cmp     #$05                            ; 2
-    bcc     skip                           ; 2/3 (+1 if page boundary crossed)
+    bcc     skip                            ; 2/3 (+1 if page boundary crossed)
     lsr     a                               ; 2
     lsr     a                               ; 2
 .skip    
